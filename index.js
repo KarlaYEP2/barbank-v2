@@ -10,7 +10,7 @@ try {
     console.log(swaggerDocument);
     app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 } catch (e) {
-    console.log(e);
+    console.log(e.message);
 }
 
 // Parse request body
@@ -21,6 +21,7 @@ require("dotenv").config()
 
 // Register routes
 app.use('/users', require('./routes/users'))
+app.use('/sessions', require('./routes/sessions'))
 
 // Open connection to MongoDB
 mongoose.connect(process.env.MONGODB_URL, function (err) {
