@@ -3,6 +3,8 @@
 const router = require('express').Router();
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const Account = require('../models/Account');
+const {verifyToken} = require("../middleware");
 
 // Handle POST /users
 module.exports = router.post('/',  async (req, res) => {
@@ -22,6 +24,13 @@ module.exports = router.post('/',  async (req, res) => {
             user.password = hash;
             user.save();
         });
+
+        //add Account
+        await Account.create({userId: user._id,
+            account_number: process.env.BANK_PREFIX + Math.random().toString(36).substr(2, 9),
+            currency: 'EUR',
+            balance: '10000',
+            name: 'Main'});
 
         // 201 Created
         res.status(201).end()
@@ -44,5 +53,22 @@ module.exports = router.post('/',  async (req, res) => {
 
         // 500 Unknown error
         return res.status(500).send({error: e.message})
+    }
+})
+module.exports = router.get('/current', verifyToken, async (req, res) => {
+    try {
+        const user = await User.findOne({_id: req.userId});
+        res.status(200).send({
+            "name": user.name,
+            "username": user.username,
+            "accounts":  await Account.find({userId: req.userId})          }
+        )
+    } catch (e) {
+
+        // 403 User access forbidden
+        if (req.params._id !== req.userId) {
+            res.status(403).json({error: "Forbidden"})
+
+        }
     }
 })

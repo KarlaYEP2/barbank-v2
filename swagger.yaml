@@ -140,6 +140,34 @@ paths:
       operationId: createuser
       summary: Create a user
       description: Creates a new instance of a `user`.
+  /users/current:
+    get:
+      tags:
+        - sessions
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+              examples:
+                POST /current/sessions response:
+                  value:
+                    accounts:
+                      -
+                        account_number: keklbh5aryzk
+                        balance: 10000
+                        currency: EUR
+                        name: Main
+                        userId: 61671f1725bce0b2a5c911df
+                    name: tom
+                    username: ligma
+          description: Successful request
+      security:
+        -
+          Bearer: []
+      summary: Get user data
+      description: Returns active `user` data
 components:
   schemas:
     error:
@@ -182,4 +210,7 @@ components:
 tags:
   -
     name: sessions
+    description: ''
+  -
+    name: users
     description: ''
