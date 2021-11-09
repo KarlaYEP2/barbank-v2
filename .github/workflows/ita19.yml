@@ -3,11 +3,13 @@
 
 name: ITA19-Pipeline
 # Siia panna kuna Workflow peaks jookma
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+on: [pull_request]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm install
+      - run: echo "Hello"
+      - run: echo "Hello world," "Calling from inside pipeline"
 
 # Erinevad tööd siia plokki
